@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>markDown</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="./style.css">
+    <script src="./bower_components/vue/dist/vue.js"></script>
+    <script src="https://unpkg.com/vue/dist/vue.js"></script>
+    <script src="https://unpkg.com/marked"></script>
+    <script src="https://unpkg.com/moment"></script>
+</head>
+<body>
+    <div id="notebook">
+        <!-- 侧边栏 -->
+        <aside class="side-bar">
+            <!-- 这是笔记列表 -->
+            <div class="toolbar">
+                <button @click="addItem" :title="addButtonTitle">+<i class="meterial-icons">Add note</i></button>
+            </div>
+            <div class="notes">
+                <!-- 笔记列表显示在这儿 -->
+                <div class="note" v-for="note in sortedNotes" @click="selectNote(note)" :class="{selected: note == selectedNote}">
+                    <i class="icon material-icons" v-if="note.favorite">star</i> {{note.title}}
+                </div>
+            </div>
+        </aside>
+        <template v-if="selectedNote">
+            <!-- 主面板 -->
+            <section class="main" >
+                <div class="toolbar">
+                    <input v-model="selectedNote.title" placeholder="note title" /> <!--重命名-->
+                    <button @click="favoriteNote" title="Favorite note"><i class="material-icons">{{selectedNote.favorite ? 'star' : 'star_border'}}</i></button>
+                    <button @click="removeNote" title="Remove note"><i class="material-icons">delete</i></button><!--删除按钮-->
+                </div>
+                <textarea v-model="selectedNote.content" rows="10"></textarea>
+                <!-- 状态栏 -->
+                <div class="toolbar status-bar">
+                    <span class="date">
+                        <span class="label">Created</span>
+                        <span class="value">{{selectedNote.created | date}}</span>
+                    </span>
+                    <span class="lines">
+                        <span class="label">Lines</span>
+                        <span class="value">{{linesCounts}}</span>
+                    </span>
+                    <span class="words">
+                        <span class="label">Words</span>
+                        <span class="value">{{wordsCount}}</span>
+                    </span>
+                    <span class="characters">
+                        <span class="label">Characters</span>
+                        <span class="value">{{charactersCount}}</span>
+                    </span>
+                </div>
+            </section>
+            <!-- 预览面板 -->
+            <section class="preview" v-html="notePreview">
+                
+            </section>
+        </template>
+    </div>
+
+
+
+
+    <script src="./app.js"></script>
+</body>
+</html>
